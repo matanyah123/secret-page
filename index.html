@@ -14,6 +14,7 @@
       font-family: sans-serif;
       margin: 0;
     }
+
     .container {
       background: white;
       padding: 2em;
@@ -23,14 +24,30 @@
       width: 90%;
       max-width: 320px;
     }
-    input {
+
+    input[type="password"] {
       width: 100%;
       padding: 0.8em;
       margin-top: 1em;
       border: 1px solid #ccc;
       border-radius: 5px;
-      font-size: 1em;
+      font-size: 2em;
+      text-align: center;
+      letter-spacing: 0.5em;
+      font-family: 'SF Pro Text', 'Helvetica Neue', sans-serif;
     }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #63D7C5;
+    }
+
     button {
       margin-top: 1em;
       width: 100%;
@@ -42,9 +59,11 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background: #56bfb0;
     }
+
     .error {
       color: red;
       font-size: 0.9em;
@@ -54,20 +73,20 @@
 </head>
 <body>
   <div class="container">
-    <h2>Enter Password</h2>
-    <input type="password" id="password" placeholder="Password" />
+    <h2>Enter Passcode</h2>
+    <input type="password" id="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" />
     <button onclick="checkPassword()">Unlock</button>
     <div class="error" id="errorMsg"></div>
   </div>
 
   <script>
-    const correctPassword = "112233"; // change this to whatever you want 🗝️
+    const correctPassword = "112233";
 
     function checkPassword() {
       const input = document.getElementById("password").value;
       const error = document.getElementById("errorMsg");
       if (input === correctPassword) {
-        window.location.href = "https://your-site.com/app"; // or another local html page like app.html
+        window.location.href = "https://stips.co.il";
       } else {
         error.textContent = "Wrong password!";
       }
