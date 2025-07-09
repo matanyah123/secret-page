@@ -3,92 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🔐 Protected</title>
+  <title>🔒 Enter Passcode</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #f7f7f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: sans-serif;
       margin: 0;
+      padding: 0;
+      background: #f1f1f1;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
     .container {
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #ccc;
+      transition: background 0.3s;
+    }
+
+    .dot.filled {
+      background: #222;
+    }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .key {
       background: white;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 90%;
-      max-width: 320px;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 0.8em;
-      margin-top: 1em;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 2em;
-      text-align: center;
-      letter-spacing: 0.5em;
-      font-family: 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    }
-
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input[type="password"]:focus {
-      outline: none;
-      border-color: #63D7C5;
-    }
-
-    button {
-      margin-top: 1em;
-      width: 100%;
-      padding: 0.8em;
-      border: none;
-      background: #63D7C5;
-      color: white;
-      font-size: 1em;
-      border-radius: 5px;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 1.5em;
+      line-height: 80px;
       cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
     }
 
-    button:hover {
-      background: #56bfb0;
+    .key:active {
+      background: #ddd;
+    }
+
+    .key.zero {
+      grid-column: 2;
+    }
+
+    .key.back {
+      font-size: 1em;
     }
 
     .error {
       color: red;
+      margin-top: 15px;
       font-size: 0.9em;
-      margin-top: 0.5em;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Enter Passcode</h2>
-    <input type="password" id="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••••" />
-    <button onclick="checkPassword()">Unlock</button>
+    <div class="dots" id="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="numpad">
+      <div class="key" onclick="pressDigit('1')">1</div>
+      <div class="key" onclick="pressDigit('2')">2</div>
+      <div class="key" onclick="pressDigit('3')">3</div>
+      <div class="key" onclick="pressDigit('4')">4</div>
+      <div class="key" onclick="pressDigit('5')">5</div>
+      <div class="key" onclick="pressDigit('6')">6</div>
+      <div class="key" onclick="pressDigit('7')">7</div>
+      <div class="key" onclick="pressDigit('8')">8</div>
+      <div class="key" onclick="pressDigit('9')">9</div>
+      <div class="key zero" onclick="pressDigit('0')">0</div>
+      <div class="key back" onclick="removeDigit()">⌫</div>
+    </div>
     <div class="error" id="errorMsg"></div>
   </div>
 
   <script>
     const correctPassword = "112233";
+    let input = "";
+
+    function updateDots() {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        if (index < input.length) {
+          dot.classList.add('filled');
+        } else {
+          dot.classList.remove('filled');
+        }
+      });
+    }
+
+    function pressDigit(digit) {
+      if (input.length >= 6) return;
+      input += digit;
+      updateDots();
+
+      if (input.length === 6) {
+        checkPassword();
+      }
+    }
+
+    function removeDigit() {
+      input = input.slice(0, -1);
+      updateDots();
+      document.getElementById("errorMsg").textContent = "";
+    }
 
     function checkPassword() {
-      const input = document.getElementById("password").value;
-      const error = document.getElementById("errorMsg");
       if (input === correctPassword) {
         window.location.href = "https://stips.co.il";
       } else {
-        error.textContent = "Wrong password!";
+        document.getElementById("errorMsg").textContent = "Wrong passcode!";
+        input = "";
+        updateDots();
       }
     }
   </script>
