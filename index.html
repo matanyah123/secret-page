@@ -98,6 +98,15 @@
       width: 100vw;
       height: 100vh;
     }
+
+    /* hidden input to catch keystrokes */
+    #hiddenInput {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+    }
   </style>
 </head>
 <body>
@@ -126,6 +135,9 @@
     </div>
     <div class="error" id="errorMsg"></div>
   </div>
+
+  <!-- hidden input for desktop typing -->
+  <input id="hiddenInput" type="text" inputmode="none" autocomplete="off" />
 
   <script>
     const correctPassword = "112233";
@@ -160,7 +172,6 @@
 
     function checkPassword() {
       if (input === correctPassword) {
-        // Replace lock screen with iframe
         document.body.innerHTML = '<iframe src="https://stips.co.il"></iframe>';
       } else {
         document.getElementById("errorMsg").textContent = "Wrong passcode!";
@@ -168,6 +179,19 @@
         updateDots();
       }
     }
+
+    // capture typing
+    document.addEventListener("keydown", (e) => {
+      if (e.key >= "0" && e.key <= "9") {
+        pressDigit(e.key);
+      } else if (e.key === "Backspace") {
+        removeDigit();
+      }
+    });
+
+    // keep hidden input from ever popping up the keyboard
+    const hiddenInput = document.getElementById("hiddenInput");
+    hiddenInput.setAttribute("readonly", "true");
   </script>
 </body>
 </html>
